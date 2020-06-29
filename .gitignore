@@ -338,3 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Smooth/output(Test.txt).txt
+/Smooth/Test2.txt
+/Smooth/Test.txt
+/Smooth/output.txt
+/Smooth/output(Test2.txt).txt

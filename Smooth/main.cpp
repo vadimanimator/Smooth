@@ -37,30 +37,47 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 	
-	copiedData = sourceData;
 	
 	cout << "working..." << endl;
 	//smooth
 	if (smoothArgument > 0) {
-		for (int i = 0; i < copiedData.size(); i++) {
-			int min = i - smoothArgument > 0 ? i - smoothArgument : 0;
-			int max = i + smoothArgument < copiedData.size() - 1 ? i + smoothArgument : copiedData.size() - 1;
-			double sum = 0;
-			for (int j = min; j <= max; j++) {
-				sum += copiedData[j];
+		double sum = 0;
+		int tempCount = 0;
+		for (int i = 0; i < sourceData.size() + smoothArgument; i++) {
+			
+			if (i < smoothArgument) {
+				sum += sourceData[i];
 			}
-			sourceData[i] = sum / (max - min + 1);
+			else {
+				if (i < sourceData.size()) {
+					sum += sourceData[i];
+				}
+				if (tempCount > smoothArgument) {
+					sum -= sourceData[i - (smoothArgument*2+1)];
+				}
+				//size wnd for this element
+				int min = tempCount - smoothArgument > 0 ? tempCount - smoothArgument : 0;
+				int max = tempCount + smoothArgument < sourceData.size() - 1 ? tempCount + smoothArgument : sourceData.size() - 1;
+				
+				copiedData.push_back(sum/(max - min + 1));
+				tempCount++;
+			}			
 		}
 	}
+	else {
+		cout << "Smooth argument is less than 0" << endl;
+		return 0;
+	}
+
 	cout << "saving..." << endl;
 	//save new data
-	ofstream fout("output(" + filename + ").txt"); 
+	ofstream fout("output(" + filename + ").txt");
 
-	for (int i = 0; i < sourceData.size(); i++) {
-		if (i < sourceData.size() - 1)
-			fout << sourceData[i] << endl;
+	for (int i = 0; i < copiedData.size(); i++) {
+		if (i < copiedData.size() - 1)
+			fout << copiedData[i] << endl;
 		else 
-			fout << sourceData[i];
+			fout << copiedData[i];
 	}
 	
 	fout.close(); 
